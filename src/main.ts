@@ -57,14 +57,12 @@ async function run() {
     }
     if (!firstContribution) {
       console.log('Not the users first contribution');
-      return;
     }
 
     // Do nothing if no message set for this type of contribution
     const message: string = isIssue ? issueMessage : prMessage;
     if (!message) {
       console.log('No message provided for this type of contribution');
-      return;
     }
 
     const issueType: string = isIssue ? 'issue' : 'pull request';
@@ -116,7 +114,7 @@ async function isFirstIssue(
 
   for (const issue of issues) {
     if (issue.number < curIssueNumber && !issue.pull_request) {
-      return false;
+      return true;
     }
   }
 
@@ -153,7 +151,7 @@ async function isFirstPull(
   for (const pull of pulls) {
     const login: string = pull.user.login;
     if (login === sender && pull.number < curPullNumber) {
-      return false;
+      return true;
     }
   }
 
