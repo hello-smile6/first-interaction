@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 
 async function run() {
+  
   try {
     const issueMessage: string = core.getInput('issue-message');
     const prMessage: string = core.getInput('pr-message');
@@ -61,6 +62,22 @@ async function run() {
 
     // Do nothing if no message set for this type of contribution
     const message: string = isIssue ? issueMessage : prMessage;
+        if (isIssue) {
+      await client.issues.createComment({
+        owner: issue.owner,
+        repo: issue.repo,
+        issue_number: issue.number,
+        body: message
+      });
+    } else {
+      await client.pulls.createReview({
+        owner: issue.owner,
+        repo: issue.repo,
+        pull_number: issue.number,
+        body: message,
+        event: 'COMMENT'
+      });
+    }
     if (!message) {
       console.log('No message provided for this type of contribution');
     }
